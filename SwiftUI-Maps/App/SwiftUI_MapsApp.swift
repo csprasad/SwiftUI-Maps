@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct SwiftUI_MapsApp: App {
+    @StateObject private var themeManager = ThemeManager()
+
     var body: some Scene {
         WindowGroup {
-            MapView()
+            HomeView()
+                .environmentObject(themeManager)
+                .preferredColorScheme(themeManager.selectedTheme.colorScheme)
         }
     }
 }

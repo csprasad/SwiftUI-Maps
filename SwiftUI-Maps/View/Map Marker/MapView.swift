@@ -20,23 +20,6 @@ struct MapView: View {
     @State private var friends: [Friend] = sampleFriends
     @State private var selectedFriend: Friend?
     
-    enum MapTheme: String, CaseIterable, Identifiable {
-        case system = "System"
-        case light  = "Light"
-        case dark   = "Dark"
-        var id: String { rawValue }
-    }
-    
-    @State private var selectedTheme: MapTheme = .system
-    
-    private var colorSchemeForMap: ColorScheme? {
-        switch selectedTheme {
-        case .system: return nil
-        case .light:  return .light
-        case .dark:   return .dark
-        }
-    }
-    
     var body: some View {
         ZStack(alignment: .top) {
             mapLayer
@@ -49,9 +32,9 @@ struct MapView: View {
                 }
                         
             VStack(spacing: 12) {
-                themePicker
+                ThemePickerView()
                     .padding(.horizontal)
-                    .padding(.top, 12)
+                    .padding(.top, 8)
                 
                 Spacer()
                 
@@ -71,7 +54,6 @@ struct MapView: View {
             }
             
         }
-        .preferredColorScheme(colorSchemeForMap)
         .onAppear {
             locationManager.start()      // start location after view appears
         }
@@ -108,28 +90,7 @@ struct MapView: View {
             }
         }
     }
-    
-    // Theme Picker View
-    private var themePicker: some View {
-        HStack {
-            Label("Map", systemImage: "map")
-                .font(.headline)
-            
-            Spacer()
-            
-            Picker("Theme", selection: $selectedTheme) {
-                ForEach(MapTheme.allCases) { theme in
-                    Text(theme.rawValue).tag(theme)
-                }
-            }
-            .pickerStyle(.segmented)
-            .frame(width: 220)
-        }
-        .padding(10)
-        .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-    }
-    
+        
     // Firend List View
     private var friendsList: some View {
         VStack(alignment: .leading, spacing: 8) {
