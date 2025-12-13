@@ -21,7 +21,9 @@ This project is meant for learning, prototyping, and exploring ideas.
 
 <table>
   <tr>
-    <td><img src="gifs/marker.gif" width="320" height="696"/></td>
+    <td><img src="images/home.png" width="260" height="566"/></td>
+    <td><img src="gifs/marker.gif" width="260" height="566"/></td>
+    
   </tr>
 </table>
 
