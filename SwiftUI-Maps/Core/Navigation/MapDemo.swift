@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct HomeView: View {
-    let demos = MapDemo.all
+struct MapDemo: View {
+    let demos = DemoModel.all
 
     var body: some View {
         NavigationView {

@@ -13,7 +13,7 @@ struct SwiftUI_MapsApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            MapDemo()
                 .environmentObject(themeManager)
                 .preferredColorScheme(themeManager.selectedTheme.colorScheme)
         }

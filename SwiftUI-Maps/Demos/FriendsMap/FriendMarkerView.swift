@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FriendMarkerView: View {
-    let friend: Friend
+    let friend: FriendMapModel
     
     var body: some View {
         VStack(spacing: 4) {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FriendDetailCard: View {
-    let friend: Friend
+    let friend: FriendMapModel
     let onClose: () -> Void
     
     var body: some View {
