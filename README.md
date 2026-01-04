@@ -23,7 +23,7 @@ This project is meant for learning, prototyping, and exploring ideas.
   <tr>
     <td><img src="images/home.png" width="260" height="566"/></td>
     <td><img src="gifs/marker.gif" width="260" height="566"/></td>
-    
+    <td><img src="images/search.png" width="260" height="566"/></td>
   </tr>
 </table>
 
