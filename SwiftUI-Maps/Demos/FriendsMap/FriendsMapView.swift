@@ -9,7 +9,7 @@
 import SwiftUI
 import MapKit
 
-struct MapView: View {
+struct FriendsMapView: View {
     @StateObject private var locationManager = LocationManager()
     
     @State private var region = MKCoordinateRegion(
@@ -17,8 +17,8 @@ struct MapView: View {
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     )
     
-    @State private var friends: [Friend] = sampleFriends
-    @State private var selectedFriend: Friend?
+    @State private var friends: [FriendMapModel] = sampleFriends
+    @State private var selectedFriend: FriendMapModel?
     
     var body: some View {
         ZStack(alignment: .top) {
