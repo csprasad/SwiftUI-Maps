@@ -1,32 +1,55 @@
-# **SwiftUI MapEx**
-![platform](https://img.shields.io/badge/platform-iOS-orange)
+# SwiftUI MapEx 🗺️
+
+![platform](https://img.shields.io/badge/Platform-iOS-orange)
+![Swift](https://img.shields.io/badge/Swift-5.9-orange)
+![SwiftUI](https://img.shields.io/badge/UI-SwiftUI-blue)
+![MapKit](https://img.shields.io/badge/Framework-MapKit-green)
 ![Repository size](https://img.shields.io/github/repo-size/csprasad/SwiftUI-Animations)
-[![GitHub license](https://img.shields.io/badge/License-Apache_2.0-orange.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-orange.svg)](LICENSE)
 
-**SwiftUI MapEx** is an experimental open-source iOS app showcasing small demos built with **SwiftUI** and **MapKit**.
-It includes Apple Maps experiments, custom annotations, light animations, and other UI interaction tests.
+Experimental iOS demos built using **SwiftUI** and **MapKit**.
 
-This project is meant for learning, prototyping, and exploring ideas.
+This repository explores:
+- Apple Maps integrations
+- Custom map annotations
+- Interactive UI experiments
+- Smooth animations & transitions
+- Prototype ideas for map-based apps
 
-<img src="images/banner.png"/>
+Designed for learning, experimentation, and rapid prototyping.
 
-## **What’s Inside**
+---
 
-* Apple Maps in SwiftUI
-* Custom annotations & marker experiments
-* Small UI animations & transitions
-* Experimental interaction patterns
+## ✨ Preview
 
-## Example
+<p align="center">
+  <img src="images/home.png" width="260"/>
+  <img src="gifs/marker.gif" width="260"/>
+  <img src="images/search.png" width="260"/>
+</p>
 
-<table>
-  <tr>
-    <td><img src="images/home.png" width="260" height="566"/></td>
-    <td><img src="gifs/marker.gif" width="260" height="566"/></td>
-    <td><img src="images/search.png" width="260" height="566"/></td>
-  </tr>
-</table>
+## 📚 Purpose
 
-## **License**
+This project is intentionally experimental.
 
-This project is licensed under the **Apache License 2.0**.
+The goal is to:
+- explore MapKit capabilities in SwiftUI
+- prototype UI ideas quickly
+- test animations and interactions
+- share reusable concepts with the community
+
+---
+
+## 🤝 Contributing
+
+Contributions, ideas, and improvements are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Open a Pull Request
+
+---
+
+## 📄 License
+
+Licensed under the Apache License 2.0.
