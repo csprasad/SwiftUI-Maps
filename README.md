@@ -22,10 +22,10 @@ Designed for learning, experimentation, and rapid prototyping.
 
 ## ✨ Preview
 
-<p align="center">
-  <img src="images/home.png" width="260"/>
-  <img src="gifs/marker.gif" width="260"/>
-  <img src="images/search.png" width="260"/>
+<p>
+  <img src="gifs/list.gif" width="25%"/>
+  <img src="gifs/FriendsMap.gif" width="25%"/>
+  <img src="gifs/SearchPlace.gif" width="25%"/>
 </p>
 
 ## 📚 Purpose
