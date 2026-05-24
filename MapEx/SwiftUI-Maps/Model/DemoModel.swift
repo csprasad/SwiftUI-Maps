@@ -38,7 +38,11 @@ extension DemoModel {
             title: "Tactical Nav Simulation",
             subtitle: "A dark-mode tactical map simulation with live ETA tracking.",
             destination: AnyView(TacticalNavView())
-        )
-        // later: more demos here
+        ),
+        DemoModel(
+            title: "Weather Simulation",
+            subtitle: "Real-time weather particle engine with procedural physics.",
+            destination: AnyView(WeatherSimulationView())
+        ),
     ]
 }
