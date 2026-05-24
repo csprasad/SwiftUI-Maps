@@ -14,10 +14,9 @@ struct MapDemo: View {
         NavigationView {
             List {
                 ThemePickerView()
-//                    .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
                 
-                Section("SwiftUI Map Experiments") {
+                Section("SwiftUI Mapkit Experiments") {
                     ForEach(demos) { demo in
                         NavigationLink {
                             demo.destination
