@@ -2,8 +2,16 @@
 //  MapDemo.swift
 //  SwiftUI-Maps
 //
-//  Created by codeAlligator on 13/12/25.
-//
+///  Created by `C S Prasad` on `13/12/25`
+///
+///`iOS • SwiftUI • Creative Coding`
+///
+/// ### Social
+/// `Instagram` : ``@csprasad.ios``
+/// `X`                   : ``@csprasad_ios``
+/// `Github`        : ``@csprasad``
+///
+
 
 import SwiftUI
 
@@ -25,6 +33,11 @@ extension DemoModel {
             title: "Search Places",
             subtitle: "User location, search bar and mark Places",
             destination: AnyView(MapSearchView())
+        ),
+        DemoModel(
+            title: "Tactical Nav Simulation",
+            subtitle: "A dark-mode tactical map simulation with live ETA tracking.",
+            destination: AnyView(TacticalNavView())
         )
         // later: more demos here
     ]

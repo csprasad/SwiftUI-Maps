@@ -23,9 +23,10 @@ Designed for learning, experimentation, and rapid prototyping.
 ## ✨ Preview
 
 <p>
-  <img src="gifs/list.gif" width="25%"/>
-  <img src="gifs/FriendsMap.gif" width="25%"/>
-  <img src="gifs/SearchPlace.gif" width="25%"/>
+  <img src="gifs/list.gif" width="24%"/>
+  <img src="gifs/FriendsMap.gif" width="24%"/>
+  <img src="gifs/SearchPlace.gif" width="24%"/>
+  <img src="gifs/Simulator.gif" width="24%"/>
 </p>
 
 ## 📚 Purpose
