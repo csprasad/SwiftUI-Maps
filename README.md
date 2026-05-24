@@ -26,7 +26,7 @@ Designed for learning, experimentation, and rapid prototyping.
   <img src="gifs/list.gif" width="24%"/>
   <img src="gifs/FriendsMap.gif" width="24%"/>
   <img src="gifs/Simulator.gif" width="24%"/>
-  <img src="gifs/WeatherSim.gif" width="24%"/>
+  <img src="gifs/weatherSim.gif" width="24%"/>
 </p>
 <p>
   <img src="gifs/SearchPlace.gif" width="24%"/>
