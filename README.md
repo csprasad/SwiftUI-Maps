@@ -53,4 +53,4 @@ Contributions, ideas, and improvements are welcome.
 
 ## 📄 License
 
-Licensed under the Apache License 2.0.
+Licensed under the MIT.
