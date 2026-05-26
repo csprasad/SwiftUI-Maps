@@ -9,30 +9,54 @@ import SwiftUI
 
 struct ThemePickerView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.colorScheme) var currentColorScheme
+    
+    private var isDark: Bool {
+        if themeManager.selectedTheme == .system {
+            return currentColorScheme == .dark
+        }
+        return themeManager.selectedTheme == .dark
+    }
     
     var body: some View {
         HStack {
             Label {
                 Text("MapEx")
+                    .tracking(0.5)
             } icon: {
-                Image(systemName: "map")
+                Image(systemName: "map.fill")
+                    .symbolEffect(.bounce, value: themeManager.selectedTheme)
                     .foregroundColor(.green)
             }
-            .font(.headline)
-                
+            .font(.system(.headline, design: .monospaced))
+            
             Spacer()
             
-            Picker("Theme", selection: $themeManager.selectedTheme) {
-                ForEach(AppTheme.allCases) { theme in
-                    Text(theme.rawValue).tag(theme)
+            Button {
+                withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+                    themeManager.selectedTheme = isDark ? .light : .dark
                 }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: isDark ? "moon.stars.fill" : "sun.max.fill")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(isDark ? .white : .yellow)
+                        .contentTransition(.symbolEffect(.replace))
+                }
+                .frame(width: 30, height: 30)
+                .background(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(.green.opacity(0.1))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(.green.opacity(0.2), lineWidth: 1)
+                )
             }
-            .pickerStyle(.segmented)
-            .frame(width: 220)
         }
-        .padding(10)
-        .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
-

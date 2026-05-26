@@ -10,75 +10,79 @@
 ///
 
 import SwiftUI
+internal import Combine
 
 // MARK: - Engine
-final class WeatherEngine {
+final class WeatherEngine: ObservableObject {
+    @Published var particles: [WeatherModel] = []
+    private var isInitialized = false
     
-    var particles: [WeatherModel] = []
-    private var lastWeather: WeatherType?
+    // tracking vectors
+    var currentVelocity = CGPoint(x: 0.2, y: 6.0)
+    var currentStretch: CGFloat = 8.0
     
-    func updateFrame(in size: CGSize, weather: WeatherType) {
+    func updateFrame(in size: CGSize, targetWeather: WeatherType) {
         guard size.width > 0, size.height > 0 else { return }
         
-        // FULL RESET WHEN SWITCHING WEATHER
-        if lastWeather != weather {
-            particles.removeAll()
-            particles = (0..<weather.particleCount).map { _ in
+        // Initial Pass
+        if !isInitialized {
+            particles = (0..<250).map { _ in
                 WeatherModel(
                     position: CGPoint(x: CGFloat.random(in: 0...size.width), y: CGFloat.random(in: 0...size.height)),
-                    speed: CGFloat.random(in: 0.8...1.8),
-                    opacity: Double.random(in: 0.2...0.9),
-                    size: CGFloat.random(in: 1.5...4),
+                    speed: CGFloat.random(in: 0.8...2.2),
+                    opacity: Double.random(in: 0.15...0.7),
+                    size: CGFloat.random(in: 1.0...2.5),
                     phase: CGFloat.random(in: 0...(CGFloat.pi * 2))
                 )
             }
-            
-            lastWeather = weather
+            isInitialized = true
+            return
         }
         
-        // PARTICLE SIMULATION
-        for index in particles.indices {
+        // Interpolation (Lerp Math)
+        currentVelocity.x += (targetWeather.targetVelocity.x - currentVelocity.x) * 0.06
+        currentVelocity.y += (targetWeather.targetVelocity.y - currentVelocity.y) * 0.06
+        currentStretch += (targetWeather.particleStretch - currentStretch) * 0.06
+        
+        // Update Loop
+        let activeCount = min(targetWeather.maxParticles, particles.count)
+        
+        for index in 0..<particles.count {
+            if index >= activeCount {
+                particles[index].opacity = max(0, particles[index].opacity - 0.02)
+            } else if particles[index].opacity < 0.15 {
+                particles[index].opacity = Double.random(in: 0.15...0.7)
+            }
             
-            switch weather {
-
-            case .rain:
-                particles[index].position.x += 0.15
-                particles[index].position.y += 4.5 * particles[index].speed
-
-                if particles[index].position.y > size.height + 120 {
-                    particles[index].position.y = -120
-                    particles[index].position.x =
-                    CGFloat.random(in: -50...size.width + 50)
+            // Apply velocities modulated by unique particle speeds
+            particles[index].position.x += currentVelocity.x * particles[index].speed
+            particles[index].position.y += currentVelocity.y * particles[index].speed
+            
+            // Secondary oscillation math for wind and snow drift profiles
+            if targetWeather == .wind || targetWeather == .snow {
+                particles[index].phase += 0.02
+                if targetWeather == .wind {
+                    particles[index].position.y += sin(particles[index].phase) * 0.3
+                } else {
+                    particles[index].position.x += sin(particles[index].phase) * 0.5
                 }
-
-            case .wind:
-                particles[index].position.x += 2.2 * particles[index].speed
-
-                particles[index].position.y +=
-                sin(particles[index].phase) * 0.15
-
-                particles[index].phase += 0.01
-
-                if particles[index].position.x > size.width + 200 {
-                    particles[index].position.x = -200
-                    particles[index].position.y =
-                    CGFloat.random(in: 0...size.height)
-                }
-
-            case .snow:
-                particles[index].phase += 0.015
-
-                particles[index].position.x +=
-                sin(particles[index].phase) * 0.45
-
-                particles[index].position.y +=
-                0.9 * particles[index].speed
-
-                if particles[index].position.y > size.height + 120 {
-                    particles[index].position.y = -120
-                    particles[index].position.x =
-                    CGFloat.random(in: -80...size.width + 80)
-                }
+            }
+            
+            // Bounding box
+            recycleIfNeeded(at: index, in: size, mode: targetWeather)
+        }
+    }
+    
+    private func recycleIfNeeded(at index: Int, in size: CGSize, mode: WeatherType) {
+        if mode == .wind {
+            if particles[index].position.x > size.width + 100 {
+                particles[index].position.x = -50
+                particles[index].position.y = CGFloat.random(in: -20...size.height + 20)
+            }
+        } else {
+            if particles[index].position.y > size.height + 50 || particles[index].position.x > size.width + 50 || particles[index].position.x < -50 {
+                particles[index].position.y = -20
+                particles[index].position.x = CGFloat.random(in: -20...size.width + 20)
             }
         }
     }

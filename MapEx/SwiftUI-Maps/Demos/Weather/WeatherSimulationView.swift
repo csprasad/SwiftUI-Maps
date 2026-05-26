@@ -12,88 +12,80 @@
 import SwiftUI
 import MapKit
 
-
-// MARK: - Main Weather View
 struct WeatherSimulationView: View {
-    
-    @State private var engine = WeatherEngine()
+    @StateObject private var engine = WeatherEngine()
     @State private var selectedWeather: WeatherType = .rain
+    
     @State private var cameraPosition: MapCameraPosition = .camera(
-        MapCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 40.7588, longitude: -73.9851), distance: 3500)
+        MapCamera(
+            centerCoordinate: CLLocationCoordinate2D(latitude: 40.7588, longitude: -73.9851),
+            distance: 1800,
+            heading: 25,
+            pitch: 60
+        )
     )
     
     var body: some View {
         ZStack(alignment: .top) {
-            
-            TimelineView(.animation(minimumInterval: 1 / 60)) { timeline in
-                Map(position: $cameraPosition) {
-                    Marker("Times Square", coordinate: CLLocationCoordinate2D(latitude: 40.7588, longitude: -73.9851))
-                }
-                .mapStyle(.standard)
-                .ignoresSafeArea()
-                .overlay {
-                    
+            Map(position: $cameraPosition, interactionModes: .all) {
+                MapCircle(center: CLLocationCoordinate2D(latitude: 40.7588, longitude: -73.9851), radius: 250)
+                    .foregroundStyle(.green.opacity(0.04))
+                    .stroke(.green.opacity(0.35), lineWidth: 1.5)
+            }
+            .mapStyle(.standard(
+                elevation: .realistic,
+                pointsOfInterest: .excludingAll
+            ))
+            .ignoresSafeArea()
+            .overlay {
+                TimelineView(.animation(minimumInterval: 1 / 60)) { timeline in
                     GeometryReader { geo in
                         Canvas { context, size in
-                            engine.updateFrame(in: size, weather: selectedWeather)
+                            context.blendMode = .screen
                             
-                            context.blendMode = .plusLighter
-                            context.addFilter(.blur(radius: 0.5))
-                            
-                            for particle in engine.particles {
-                                
+                            for particle in engine.particles where particle.opacity > 0 {
                                 var path = Path()
-                                let width = selectedWeather == .snow ? particle.size * 2.4 : particle.size
-                                let height = selectedWeather == .snow ? particle.size * 2.4 : particle.size * selectedWeather.particleStretch
+                                
+                                let isSnow = selectedWeather == .snow
+                                let width = isSnow ? particle.size * 2.2 : particle.size
+                                let height = isSnow ? particle.size * 2.2 : particle.size * engine.currentStretch
                                 
                                 if selectedWeather == .wind {
-                                    path.addRoundedRect(in: CGRect(
+                                    path.addRoundedRect(
+                                        in: CGRect(
                                             x: particle.position.x,
                                             y: particle.position.y,
-                                            width: particle.size * 26,
-                                            height: particle.size * 2.2
+                                            width: particle.size * 35,
+                                            height: 3.5 + (particle.size * 1.5)
                                         ),
-                                        cornerSize: CGSize(width: 20, height: 20)
+                                        cornerSize: CGSize(width: 4, height: 4)
                                     )
                                 } else {
-                                    path.addRoundedRect(in: CGRect(
-                                            x: particle.position.x,
-                                            y: particle.position.y,
-                                            width: width,
-                                            height: height
-                                        ),
-                                        cornerSize: CGSize(width: 10, height: 10)
+                                    path.addRoundedRect(
+                                        in: CGRect(x: particle.position.x, y: particle.position.y, width: width, height: height),
+                                        cornerSize: CGSize(width: 4, height: 4)
                                     )
                                 }
                                 
-                                let opacity =
-                                selectedWeather == .wind ? particle.opacity * 0.45 : particle.opacity * 0.8
+                                let opacity = selectedWeather == .wind ? particle.opacity * 0.35 : particle.opacity * 0.85
                                 context.opacity = opacity
                                 context.fill(path, with: .color(selectedWeather.color))
                             }
                         }
-                        .blur(radius: selectedWeather == .wind ? 12 : selectedWeather == .snow ? 0.5 : 0)
+                        .blur(radius: selectedWeather == .wind ? 1.5 : (selectedWeather == .snow ? 0.5 : 0))
+                        .onChange(of: timeline.date) { _, _ in
+                            engine.updateFrame(in: geo.size, targetWeather: selectedWeather)
+                        }
                     }
                 }
-            }.ignoresSafeArea()
-            
-            // Picker Controller
-            VStack {
-                Picker("Weather", selection: $selectedWeather) {
-                    ForEach(WeatherType.allCases) { weather in
-                        Text(weather.rawValue)
-                            .tag(weather)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .padding(6)
-                .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 18))
-                .padding(.horizontal, 20)
-                .padding(.top)
-                
-                Spacer()
+                .allowsHitTesting(false) // Ensures touch events pass through to the Map layer
             }
-        }.preferredColorScheme(.dark)
+            
+            // Connected Weather Console UI layer
+            WeatherConsoleController(selectedWeather: $selectedWeather)
+                .padding(.horizontal, 16)
+                .padding(.top, 64)
+        }
+        .preferredColorScheme(.dark)
     }
 }
