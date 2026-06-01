@@ -39,27 +39,21 @@ struct FriendsMapView: View {
                 }
                         
             VStack(spacing: 12) {
-                ThemePickerView()
-                    .padding(.horizontal)
-                    .padding(.top, 8)
-                
                 Spacer()
-                
                 friendsList
                     .padding(.bottom, 16)
-            }
-            
-            if let friend = selectedFriend {
-                FriendDetailCard(friend: friend) {
-                    withAnimation(.spring()) {
-                        selectedFriend = nil
+                
+                if let friend = selectedFriend {
+                    FriendDetailCard(friend: friend) {
+                        withAnimation(.spring()) {
+                            selectedFriend = nil
+                        }
                     }
+                    .padding(.horizontal)
+                    .padding(.bottom, 70)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
-                .padding(.horizontal)
-                .padding(.top, 70)
-                .transition(.move(edge: .top).combined(with: .opacity))
             }
-            
         }
         .onAppear {
             locationManager.start()      // start location after view appears

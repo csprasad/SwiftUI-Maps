@@ -81,10 +81,14 @@ struct WeatherSimulationView: View {
                 .allowsHitTesting(false) // Ensures touch events pass through to the Map layer
             }
             
-            // Connected Weather Console UI layer
-            WeatherConsoleController(selectedWeather: $selectedWeather)
-                .padding(.horizontal, 16)
-                .padding(.top, 64)
+            
+            VStack {
+                Spacer()
+                // Connected Weather Console UI layer
+                WeatherConsoleController(selectedWeather: $selectedWeather)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 64)
+            }
         }
         .preferredColorScheme(.dark)
     }

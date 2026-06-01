@@ -32,7 +32,7 @@ struct TacticalInterceptCard: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("TARGET DATA INTERCEPT INTERACTIVE SHEET (CARD B)")
+                            Text("TARGET COORDINATE MATRIX")
                                 .font(.system(size: 9, weight: .black, design: .monospaced)).foregroundColor(.purple)
                             Text(tel.currentNode.landmark)
                                 .font(.subheadline).bold().foregroundColor(.primary).lineLimit(1)
@@ -106,10 +106,10 @@ struct TacticalInterceptCard: View {
                     .frame(maxHeight: 210)
                 }
             }
-                .glassEffect(
-                    .regular,
-                    in: .rect(cornerRadius: 22)
-                )
+            .glassEffect(
+                .regular,
+                in: .rect(cornerRadius: 22)
+            )
         )
     }
 }

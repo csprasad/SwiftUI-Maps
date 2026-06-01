@@ -1,6 +1,6 @@
 //
 //
-//  MapGeometricSandboxView.swift
+//  GeometricSandboxView.swift
 //  SwiftUI-Maps
 //
 /// Created by `C S Prasad` on `01/06/26`
@@ -13,7 +13,7 @@ import SwiftUI
 import MapKit
 internal import Combine
 
-public struct MapGeometricSandboxView: View {
+public struct GeometricSandboxView: View {
     @State private var position: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 40.7580, longitude: -73.9855), // Times Square Anchor Default
@@ -63,6 +63,7 @@ public struct MapGeometricSandboxView: View {
                                 .onTapGesture {
                                     withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
                                         selectedNodeID = (selectedNodeID == node.id) ? nil : node.id
+                                        selectedNodeID = node.id
                                     }
                                 }
                         }
@@ -86,11 +87,10 @@ public struct MapGeometricSandboxView: View {
                         .font(.system(size: 9, weight: .black, design: .monospaced))
                         .foregroundColor(nodes.count >= 3 ? .cyan : .orange)
                 }
-                .padding(.horizontal, 14)
+                .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 .glassEffect(.regular, in: .rect(cornerRadius: 22))
                 .cornerRadius(8)
-                .padding(.top, 10)
                 
                 Spacer()
                 
@@ -154,20 +154,17 @@ public struct MapGeometricSandboxView: View {
                 
                 await MainActor.run {
                     if let idx = nodes.firstIndex(where: { $0.id == id }) {
-                        // Update state components using the correct, verified iOS 26 properties
-                        nodes[idx].cityName = structuralRepresentations?.cityName ?? "Unknown Sector"
-                        nodes[idx].zone = structuralRepresentations?.regionName ?? "Sector Zone"
-                        nodes[idx].countryCode = structuralRepresentations?.region?.identifier ?? ""
-                        nodes[idx].landmark = mapItem.name ?? "Tactical Vector"
-                        nodes[idx].timeZone = timeZoneRepresentation
+                        let city = structuralRepresentations?.cityName ?? "UNKNOWN CITY"
+                        let state = structuralRepresentations?.regionName ?? "UNKNOWN STATE"
+                        let country = structuralRepresentations?.region?.identifier ?? "UNKNOWN COUNTRY"
+                        let area = mapItem.name ?? "UNKNOWN SECTOR"
                         
-                        // Force-refresh the active annotation layer tracking state
-                        if selectedNodeID == id {
-                            selectedNodeID = nil
-                            withAnimation(.easeOut(duration: 0.15)) {
-                                selectedNodeID = id
-                            }
-                        }
+                        // Directly update properties without touching selectedNodeID
+                        nodes[idx].landmark = area.uppercased()
+                        nodes[idx].cityName = city.uppercased()
+                        nodes[idx].zone = state.uppercased()
+                        nodes[idx].countryCode = country.uppercased()
+                        nodes[idx].timeZone = timeZoneRepresentation                        
                     }
                 }
             } catch {
@@ -175,4 +172,8 @@ public struct MapGeometricSandboxView: View {
             }
         }
     }
+}
+
+#Preview {
+    GeometricSandboxView()
 }

@@ -16,23 +16,38 @@ struct MapDemo: View {
                 ThemePickerView()
                     .listRowInsets(EdgeInsets())
                 
-                Section("SwiftUI Mapkit Experiments") {
+                Section{
                     ForEach(demos) { demo in
                         NavigationLink {
                             demo.destination
-                                .navigationTitle(demo.title)
+                                .navigationBarBackButtonHidden(false)
+                                .toolbar {
+                                    ToolbarItem(placement: .principal) {
+                                        Text(demo.title.uppercased())
+                                            .font(.system(size: 14, design: .monospaced))
+                                            .foregroundColor(.primary)
+                                    }
+                                }
                                 .navigationBarTitleDisplayMode(.inline)
+                                
                         } label: {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(demo.title)
-                                    .font(.headline)
+                                Text(demo.title.uppercased())
+                                    .font(.system(.headline, design: .monospaced))
+                                    .fontWeight(.bold)
+                                
                                 Text(demo.subtitle)
-                                    .font(.subheadline)
+                                    .font(.system(.caption, design: .monospaced))
                                     .foregroundStyle(.secondary)
                             }
                             .padding(.vertical, 4)
                         }
                     }
+                } header: {
+                    Text("SwiftUI Mapkit Experiments".uppercased())
+                        .font(.system(.footnote, design: .monospaced))
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
                 }
             }
         }

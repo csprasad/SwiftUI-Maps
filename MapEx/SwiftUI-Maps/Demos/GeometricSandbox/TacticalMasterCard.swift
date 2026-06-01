@@ -58,7 +58,7 @@ struct TacticalMasterCard: View {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("MASTER COMMAND COMPLEX (CARD A)")
+                        Text("TACTICAL OPERATIONS COMPLEX")
                             .font(.system(size: 9, weight: .black, design: .monospaced))
                             .foregroundColor(.cyan)
                         

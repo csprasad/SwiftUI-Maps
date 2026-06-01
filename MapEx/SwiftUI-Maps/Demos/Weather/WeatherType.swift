@@ -32,7 +32,7 @@ enum WeatherType: String, CaseIterable, Identifiable {
     var color: Color {
         switch self {
         case .rain: return Color.cyan
-        case .wind: return Color.blue.opacity(0.4)
+        case .wind: return Color.white.opacity(0.5)
         case .snow: return Color.white
         }
     }

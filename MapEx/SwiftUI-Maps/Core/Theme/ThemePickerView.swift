@@ -29,6 +29,7 @@ struct ThemePickerView: View {
                     .foregroundColor(.green)
             }
             .font(.system(.headline, design: .monospaced))
+            .fontWeight(.bold)
             
             Spacer()
             
