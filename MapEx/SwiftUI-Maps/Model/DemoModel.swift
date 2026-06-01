@@ -44,5 +44,10 @@ extension DemoModel {
             subtitle: "Real-time weather particle engine with procedural physics.",
             destination: AnyView(WeatherSimulationView())
         ),
+        DemoModel(
+            title: "Tactical Command Deck",
+            subtitle: "Real-time geographic telemetry processing.",
+            destination: AnyView(MapGeometricSandboxView())
+        ),
     ]
 }
