@@ -197,8 +197,11 @@ struct TacticalNavView: View {
     //MARK: - OUTER PIPELINES
     private func requestSystemRouteData() {
         let request = MKDirections.Request()
-        request.source = MKMapItem(placemark: MKPlacemark(coordinate: originPoint))
-        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: targetPoint))
+        let originLocation = CLLocation(latitude: originPoint.latitude, longitude: originPoint.longitude)
+        let targetLocation = CLLocation(latitude: targetPoint.latitude, longitude: targetPoint.longitude)
+
+        request.source = MKMapItem(location: originLocation, address: nil)
+        request.destination = MKMapItem(location: targetLocation, address: nil)
         request.transportType = .walking
         
         Task {

@@ -34,8 +34,11 @@ struct MapSearchView: View {
         Map(position: $cameraPosition) {
             // Selected place marker
             if let place = selectedPlace {
-                Marker(place.item.name ?? "Place",
-                       coordinate: place.item.placemark.coordinate)
+                // Modern iOS 26 Marker mapping via direct item location coordinates
+                Marker(
+                    place.item.name ?? "Place",
+                    coordinate: place.item.location.coordinate
+                )
             }
         }
         .mapControls {
@@ -60,9 +63,6 @@ struct MapSearchView: View {
             currentRegion = cameraPosition.region
 
         }
-//        .sheet(item: $selectedPlace) { wrapped in
-//            placeDetail(wrapped.item)
-//        }
         .onAppear {
             locationManager.start()
         }
@@ -94,7 +94,7 @@ struct MapSearchView: View {
         withAnimation(.easeInOut) {
             cameraPosition = .region(
                 MKCoordinateRegion(
-                    center: place.placemark.coordinate,
+                    center: place.location.coordinate,
                     span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03)
                 )
             )
@@ -115,7 +115,7 @@ struct MapSearchView: View {
             Text(place.name ?? "")
                 .font(.headline)
 
-            if let address = place.placemark.title {
+            if let address = place.address?.fullAddress {
                 Text(address)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)

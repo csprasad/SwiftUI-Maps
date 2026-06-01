@@ -23,12 +23,13 @@ Designed for learning, experimentation, and rapid prototyping.
 ## ✨ Preview
 
 <p>
-  <img src="gifs/list.gif" width="24%"/>
+  <img src="images/MapEx_List.png" width="24%"/>
   <img src="gifs/FriendsMap.gif" width="24%"/>
+  <img src="gifs/CMD_Deck.gif" width="24%"/>
   <img src="gifs/Simulator.gif" width="24%"/>
-  <img src="gifs/weatherSim.gif" width="24%"/>
 </p>
 <p>
+  <img src="gifs/weatherSim.gif" width="24%"/>
   <img src="gifs/SearchPlace.gif" width="24%"/>
 </p>
 

@@ -46,7 +46,6 @@ struct FriendDetailCard: View {
         .padding(12)
         .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .shadow(radius: 8)
     }
 }
 
