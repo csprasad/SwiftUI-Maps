@@ -100,7 +100,8 @@ struct MapSearchView: View {
         }
     }
 
-    // MARK: - Helpers
+    /// Provides the cached camera region if available, otherwise a global fallback region.
+    /// - Returns: The `currentRegion` if non-`nil`; otherwise an `MKCoordinateRegion` centered at latitude 0, longitude 0 with `latitudeDelta` and `longitudeDelta` of 180 degrees.
     private func regionFromCamera() -> MKCoordinateRegion {
         currentRegion ?? MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -108,6 +109,11 @@ struct MapSearchView: View {
         )
     }
 
+    /// Creates a compact detail view for the provided map place.
+    /// 
+    /// The view shows the place's name, its formatted address if available, and a "Close" button that clears the current selection.
+    /// - Parameter place: The `MKMapItem` whose details are displayed.
+    /// - Returns: A view displaying the place's name, optional address, and a Close button that clears `selectedPlace`.
     private func placeDetail(_ place: MKMapItem) -> some View {
         VStack(spacing: 12) {
             Text(place.name ?? "")

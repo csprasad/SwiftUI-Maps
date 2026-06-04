@@ -21,6 +21,10 @@ final class WeatherEngine: ObservableObject {
     var currentVelocity = CGPoint(x: 0.2, y: 6.0)
     var currentStretch: CGFloat = 8.0
 
+    /// Updates the particle system for a new frame: initializes particles on first use, adjusts global velocity/stretch toward the requested weather, advances each particle's state (position, opacity, phase), and recycles particles that move outside the given bounds.
+    /// - Parameters:
+    ///   - size: The viewport size used to constrain and recycle particles; if width or height is not greater than zero the update is skipped.
+    ///   - targetWeather: The desired weather profile that controls target velocity, particle stretch, maximum active particles, and mode-specific drift behavior (wind or snow).
     func updateFrame(in size: CGSize, targetWeather: WeatherType) {
         guard size.width > 0, size.height > 0 else { return }
 
@@ -73,6 +77,14 @@ final class WeatherEngine: ObservableObject {
         }
     }
 
+    /// Repositions a particle that moved outside the allowable bounds according to the current weather mode.
+    /// 
+    /// For `.wind` mode, a particle that has moved past `size.width + 100` is wrapped to `x = -50` and its `y` is randomized within `-20...size.height + 20`.
+    /// For all other modes, a particle that has moved past the bottom (`y > size.height + 50`) or beyond the horizontal bounds (`x > size.width + 50` or `x < -50`) is moved to `y = -20` and its `x` is randomized within `-20...size.width + 20`.
+    /// - Parameters:
+    ///   - index: The index of the particle in `particles` to check and potentially reposition.
+    ///   - size: The current bounding size used to determine out-of-bounds conditions.
+    ///   - mode: The active `WeatherType` that determines the recycling behavior.
     private func recycleIfNeeded(at index: Int, in size: CGSize, mode: WeatherType) {
         if mode == .wind {
             if particles[index].position.x > size.width + 100 {

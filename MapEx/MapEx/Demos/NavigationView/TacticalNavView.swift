@@ -196,7 +196,9 @@ struct TacticalNavView: View {
         }
     }
 
-    // MARK: - OUTER PIPELINES
+    /// Requests a walking route between the view's `originPoint` and `targetPoint`, stores the route coordinates, and starts the briefing animation.
+    /// 
+    /// On success, updates `streetWaypoints` on the main actor and calls `triggerBriefingAnimation()` to begin the route reveal and subsequent simulation. Failures are logged to the console.
     private func requestSystemRouteData() {
         let request = MKDirections.Request()
         let originLocation = CLLocation(latitude: originPoint.latitude, longitude: originPoint.longitude)
@@ -226,6 +228,10 @@ struct TacticalNavView: View {
         }
     }
 
+    /// Begins the route briefing sequence: reveals the plotted route, positions the map for an overhead briefing, then transitions the view and simulation into active tracking.
+    /// 
+    /// The method resets drawing and vehicle state, animates the route reveal over ~2.2 seconds, then after ~2.5 seconds computes an initial heading (if waypoints exist) and animates a camera swoop into a close tracking view. After an additional ~2.0 seconds it initializes segment indices and switches the navigation state to active simulation.
+    /// - Note: Updates multiple view-model properties as side effects: `simState`, `lineProgress`, `currentVehiclePos`, `position`, `targetHeading`, `smoothHeading`, `arrayIndex`, and `stepProgress`.
     private func triggerBriefingAnimation() {
         simState = .routePlotting
         lineProgress = 0.0
@@ -261,7 +267,14 @@ struct TacticalNavView: View {
         }
     }
 
-    // MARK: - Simulation
+    /// Advances the navigation simulation by one time step along the current route segment and updates related simulation state.
+    /// 
+    /// This updates the interpolated vehicle coordinate between the current and next waypoint, applies a low‑pass filter to smooth heading changes, and repositions the map camera to follow the simulated vehicle. If the interpolation completes the current segment, the function advances the segment index, refreshes telemetry values, and returns; if the simulation reached the final waypoint, it restarts the briefing animation loop.
+    /// 
+    /// Side effects:
+    /// - Mutates `currentVehiclePos`, `stepProgress`, `arrayIndex`, `targetHeading`, `smoothHeading`, and `position`.
+    /// - May call `updateTelemetryCalculations()` when a segment completes.
+    /// - May call `triggerBriefingAnimation()` when the route has finished to loop the simulation.
     private func stepSimulationLocomotion() {
         let terminalBound = streetWaypoints.count - 1
         guard arrayIndex < terminalBound else {
@@ -308,7 +321,9 @@ struct TacticalNavView: View {
         )
     }
 
-    // MARK: - HUD DATA MATRICES WORKFLOWS
+    /// Updates the HUD telemetry values for remaining distance and estimated time of arrival based on the current waypoint progress.
+    /// 
+    /// Computes an approximate meters-remaining value as `14.5 * itemsRemaining`, formats and assigns `totalDistanceLeft` as `"%.2f KM"` when over 1000 meters or `"%.0f METERS"` otherwise. Converts the distance to an estimated seconds remaining using `seconds = meters / 4.2`, adds that to the current time, formats the resulting timestamp as `"HH:mm:ss"`, and assigns it to `simulatedETA`.
     private func updateTelemetryCalculations() {
         let totalElements = streetWaypoints.count
         let itemsRemaining = totalElements - arrayIndex
@@ -331,6 +346,10 @@ struct TacticalNavView: View {
         }
     }
 
+    /// Selects the subset of route waypoints to draw according to the current plotting progress.
+    /// 
+    /// When the view is in the `routePlotting` state, returns a prefix of `streetWaypoints` whose length is proportional to `lineProgress` (at least one coordinate). Otherwise returns the full `streetWaypoints` array.
+    /// - Returns: An array of `CLLocationCoordinate2D` representing the points to render for the route polyline.
     private func getRenderedLinePoints() -> [CLLocationCoordinate2D] {
         if simState == .routePlotting {
             let limit = Int(lineProgress * Double(streetWaypoints.count))
@@ -339,6 +358,11 @@ struct TacticalNavView: View {
         return streetWaypoints
     }
 
+    /// Computes the initial bearing from one geographic coordinate to another.
+    /// - Parameters:
+    ///   - from: The starting coordinate.
+    ///   - to: The destination coordinate.
+    /// - Returns: The initial bearing in degrees clockwise from true north, normalized to the range [0, 360).
     private func calculateBearingAngle(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D) -> Double {
         let lat1 = from.latitude * .pi / 180
         let lon1 = from.longitude * .pi / 180

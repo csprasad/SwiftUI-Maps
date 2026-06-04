@@ -127,12 +127,20 @@ public struct GeometricSandboxView: View {
         }
     }
 
+    /// Update the coordinate of the tactical node matching the given identifier.
+    /// If no node with the specified `id` exists, the call has no effect.
+    /// - Parameters:
+    ///   - id: The identifier of the node to update.
+    ///   - coordinate: The new geographic coordinate for the node.
     private func updateNodeCoordinate(id: UUID, to coordinate: CLLocationCoordinate2D) {
         if let index = nodes.firstIndex(where: { $0.id == id }) {
             nodes[index].coordinate = coordinate
         }
     }
 
+    /// Create a new tactical node at the given map coordinate, append it to the node list, select it, and initiate reverse-geocoding telemetry.
+    /// - Parameters:
+    ///   - coordinate: The map coordinate where the new node will be placed.
     private func createNewNode(at coordinate: CLLocationCoordinate2D) {
         let newNode = TacticalNode(coordinate: coordinate)
         nodes.append(newNode)
@@ -140,6 +148,9 @@ public struct GeometricSandboxView: View {
         fetchGeocodingTelemetry(for: newNode.id)
     }
 
+    /// Fetches reverse-geocoding information for the tactical node with the given `id` and updates that node's address and timezone properties on the main actor.
+    /// - Parameter id: The identifier of the node to refresh; no action is taken if no matching node exists.
+    /// - Note: If reverse-geocoding fails or returns no results, the method performs no updates and logs a failure message.
     private func fetchGeocodingTelemetry(for id: UUID) {
         guard let index = nodes.firstIndex(where: { $0.id == id }) else { return }
         let coord = nodes[index].coordinate
