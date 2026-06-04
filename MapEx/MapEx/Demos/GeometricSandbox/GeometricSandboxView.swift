@@ -131,7 +131,11 @@ public struct GeometricSandboxView: View {
     /// If no node with the specified `id` exists, the call has no effect.
     /// - Parameters:
     ///   - id: The identifier of the node to update.
-    ///   - coordinate: The new geographic coordinate for the node.
+    /// Update the coordinate of the node with the specified identifier.
+    /// - Parameters:
+    ///   - id: The unique identifier of the node to update.
+    ///   - coordinate: The new geographic coordinate to assign to the node.
+    /// - Note: If no node with `id` exists, the function performs no action.
     private func updateNodeCoordinate(id: UUID, to coordinate: CLLocationCoordinate2D) {
         if let index = nodes.firstIndex(where: { $0.id == id }) {
             nodes[index].coordinate = coordinate
@@ -140,7 +144,8 @@ public struct GeometricSandboxView: View {
 
     /// Create a new tactical node at the given map coordinate, append it to the node list, select it, and initiate reverse-geocoding telemetry.
     /// - Parameters:
-    ///   - coordinate: The map coordinate where the new node will be placed.
+    /// Creates a new `TacticalNode` at the given map coordinate, appends it to `nodes`, sets it as the current selection, and initiates reverse-geocoding telemetry for that node.
+    /// - Parameter coordinate: The geographic coordinate where the new node will be placed.
     private func createNewNode(at coordinate: CLLocationCoordinate2D) {
         let newNode = TacticalNode(coordinate: coordinate)
         nodes.append(newNode)
@@ -150,7 +155,9 @@ public struct GeometricSandboxView: View {
 
     /// Fetches reverse-geocoding information for the tactical node with the given `id` and updates that node's address and timezone properties on the main actor.
     /// - Parameter id: The identifier of the node to refresh; no action is taken if no matching node exists.
-    /// - Note: If reverse-geocoding fails or returns no results, the method performs no updates and logs a failure message.
+    /// Fetches reverse-geocoding information for a node and updates that node's address and timezone fields.
+    /// - Details: Performs an asynchronous reverse-geocoding lookup for the node's current coordinate and, if the node still exists at that same coordinate when results return, updates the node's `landmark`, `cityName`, `zone`, `countryCode`, and `timeZone`. If no results are found or the node moved before the response arrives, no changes are applied; failures are logged but not thrown.
+    /// - Parameter id: The UUID of the node to resolve and update.
     private func fetchGeocodingTelemetry(for id: UUID) {
         guard let index = nodes.firstIndex(where: { $0.id == id }) else { return }
         let coord = nodes[index].coordinate

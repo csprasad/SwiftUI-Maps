@@ -86,7 +86,9 @@ struct MapSearchView: View {
         }
     }
 
-    // MARK: - Select place
+    /// Selects the given place and recenters the map camera on its coordinate with an animated zoom.
+    /// - Parameters:
+    ///   - place: The `MKMapItem` to mark as selected and to center the map on.
     private func selectPlace(_ place: MKMapItem) {
         selectedPlace = IdentifiableMapItem(item: place)
 
@@ -101,7 +103,8 @@ struct MapSearchView: View {
     }
 
     /// Provides the cached camera region if available, otherwise a global fallback region.
-    /// - Returns: The `currentRegion` if non-`nil`; otherwise an `MKCoordinateRegion` centered at latitude 0, longitude 0 with `latitudeDelta` and `longitudeDelta` of 180 degrees.
+    /// Returns the cached map region if available, otherwise a fallback global region.
+    /// - Returns: The `MKCoordinateRegion` stored in `currentRegion` if non-nil; otherwise a region centered at latitude 0, longitude 0 with `latitudeDelta` and `longitudeDelta` of 180.
     private func regionFromCamera() -> MKCoordinateRegion {
         currentRegion ?? MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -113,7 +116,9 @@ struct MapSearchView: View {
     /// 
     /// The view shows the place's name, its formatted address if available, and a "Close" button that clears the current selection.
     /// - Parameter place: The `MKMapItem` whose details are displayed.
-    /// - Returns: A view displaying the place's name, optional address, and a Close button that clears `selectedPlace`.
+    /// Constructs a compact detail view for the provided map item.
+    /// - Parameter place: The `MKMapItem` whose details are shown.
+    /// - Returns: A view showing the place name, an optional address (if available), and a "Close" button that clears the current selection.
     private func placeDetail(_ place: MKMapItem) -> some View {
         VStack(spacing: 12) {
             Text(place.name ?? "")

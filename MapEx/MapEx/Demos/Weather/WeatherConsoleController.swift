@@ -94,7 +94,9 @@ struct WeatherConsoleController: View {
 
     /// Advances the bound `selectedWeather` to the next `WeatherType` case, wrapping to the first case when currently at the last case.
     /// 
-    /// If `selectedWeather` is not found in `WeatherType.allCases`, the value is left unchanged.
+    /// Advances `selectedWeather` to the next case in `WeatherType.allCases`, wrapping to the first case after the last.
+    ///
+    /// If the current `selectedWeather` is not found in `WeatherType.allCases`, no change is made.
     private func cycleWeather() {
         let all = WeatherType.allCases
         if let currentIdx = all.firstIndex(of: selectedWeather) {
