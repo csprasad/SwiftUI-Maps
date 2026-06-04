@@ -156,7 +156,6 @@ public struct GeometricSandboxView: View {
         let coord = nodes[index].coordinate
 
         let targetLocation = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
-        let expectedLocation = targetLocation
 
         Task {
             guard let request = MKReverseGeocodingRequest(location: targetLocation) else { return }
@@ -170,8 +169,7 @@ public struct GeometricSandboxView: View {
                 let timeZoneRepresentation = mapItem.timeZone
 
                 await MainActor.run {
-                    guard let idx = nodes.firstIndex(where: { $0.id == id }),
-                          nodes[idx].location == expectedLocation else { return }
+                    guard let idx = nodes.firstIndex(where: { $0.id == id }) else { return }
 
                     let city = structuralRepresentations?.cityName ?? "UNKNOWN CITY"
                     let state = structuralRepresentations?.regionName ?? "UNKNOWN STATE"
