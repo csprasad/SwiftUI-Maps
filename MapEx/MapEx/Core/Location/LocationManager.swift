@@ -28,7 +28,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
         // Debug
         print("start() called, status:", manager.authorizationStatus.rawValue)
-                manager.requestWhenInUseAuthorization()
 
         let status = manager.authorizationStatus
         if status == .authorizedWhenInUse || status == .authorizedAlways {

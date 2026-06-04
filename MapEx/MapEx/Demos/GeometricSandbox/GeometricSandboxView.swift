@@ -156,6 +156,7 @@ public struct GeometricSandboxView: View {
         let coord = nodes[index].coordinate
 
         let targetLocation = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+        let expectedLocation = targetLocation
 
         Task {
             guard let request = MKReverseGeocodingRequest(location: targetLocation) else { return }
@@ -169,19 +170,20 @@ public struct GeometricSandboxView: View {
                 let timeZoneRepresentation = mapItem.timeZone
 
                 await MainActor.run {
-                    if let idx = nodes.firstIndex(where: { $0.id == id }) {
-                        let city = structuralRepresentations?.cityName ?? "UNKNOWN CITY"
-                        let state = structuralRepresentations?.regionName ?? "UNKNOWN STATE"
-                        let country = structuralRepresentations?.region?.identifier ?? "UNKNOWN COUNTRY"
-                        let area = mapItem.name ?? "UNKNOWN SECTOR"
+                    guard let idx = nodes.firstIndex(where: { $0.id == id }),
+                          nodes[idx].location == expectedLocation else { return }
 
-                        // Directly update properties without touching selectedNodeID
-                        nodes[idx].landmark = area.uppercased()
-                        nodes[idx].cityName = city.uppercased()
-                        nodes[idx].zone = state.uppercased()
-                        nodes[idx].countryCode = country.uppercased()
-                        nodes[idx].timeZone = timeZoneRepresentation
-                    }
+                    let city = structuralRepresentations?.cityName ?? "UNKNOWN CITY"
+                    let state = structuralRepresentations?.regionName ?? "UNKNOWN STATE"
+                    let country = structuralRepresentations?.region?.identifier ?? "UNKNOWN COUNTRY"
+                    let area = mapItem.name ?? "UNKNOWN SECTOR"
+
+                    // Directly update properties without touching selectedNodeID
+                    nodes[idx].landmark = area.uppercased()
+                    nodes[idx].cityName = city.uppercased()
+                    nodes[idx].zone = state.uppercased()
+                    nodes[idx].countryCode = country.uppercased()
+                    nodes[idx].timeZone = timeZoneRepresentation
                 }
             } catch {
                 print("TACTICAL TELEMETRY FAILURE: Reverse lookup error - \(error.localizedDescription)")
